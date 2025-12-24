@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 
+import { AIMessage } from '@/components/Messages/AI/AI';
+import { UserMessage } from '@/components/Messages/User';
 import { useChatStore } from '@/store/store';
 import type { Message } from '@/store/type';
-
-import { AIMessage } from './AI';
-import { UserMessage } from './User';
 
 export function MessageList() {
   const messages = useChatStore((state) => state.messages);
