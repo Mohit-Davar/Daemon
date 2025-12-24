@@ -1,16 +1,16 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-    --bg-editor: var(--vscode-editor-background);
-    --fg-editor: var(--vscode-editor-foreground);
+  --bg-editor: var(--vscode-editor-background);
+  --fg-editor: var(--vscode-editor-foreground);
 }
 
 /* Chrome / Edge / Safari */
 textarea::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* Firefox */
 textarea {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }

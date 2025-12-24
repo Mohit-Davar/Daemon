@@ -13,9 +13,7 @@ export function ChatInput() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <div
-      className="bg-[var(--bg-editor)] shadow-lg backdrop-blur-md m-3 p-3 border border-[var(--vscode-widget-border)] rounded-xl"
-    >
+    <div className="bg-[var(--bg-editor)] shadow-lg backdrop-blur-md m-3 p-3 border border-[var(--vscode-widget-border)] rounded-xl">
       {/* TEXTAREA */}
       <textarea
         ref={textareaRef}
@@ -38,9 +36,7 @@ export function ChatInput() {
       {/* BUTTONS */}
       <div className="flex justify-between items-center mt-2">
         {/* ADD FILE */}
-        <button
-          className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer"
-        >
+        <button className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer">
           <Plus size={16} />
         </button>
 

@@ -22,7 +22,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const lastIndex = state.messages.length - 1;
       const lastMsg = state.messages[lastIndex];
 
-      if (!lastMsg || lastMsg.sender !== 'ai') return state;
+      if (!lastMsg || lastMsg.sender !== 'ai') {
+        return state;
+      }
 
       // clone only what is needed
       const messages = state.messages.slice();
@@ -39,11 +41,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     // user message
     set((state) => ({
-      messages: [
-        ...state.messages,
-        { text: query, sender: 'user' },
-        { text: '', sender: 'ai' },
-      ],
+      messages: [...state.messages, { text: query, sender: 'user' }, { text: '', sender: 'ai' }],
       query: '',
       loading: true,
     }));
@@ -52,9 +50,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       command: 'query',
       text: query,
     });
-  }
+  },
 }));
-
 
 window.addEventListener('message', (event) => {
   const { text, command } = event.data;

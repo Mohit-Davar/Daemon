@@ -12,17 +12,12 @@ export function MessageList() {
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-
   }, [messages, lastMessageLength]);
 
   return (
-    <div
-      ref={chatContainerRef}
-      className="space-y-4 p-3 w-full overflow-y-auto"
-    >
+    <div ref={chatContainerRef} className="space-y-4 p-3 w-full overflow-y-auto">
       {messages.map((msg: Message, index: number) => {
         if (msg.sender === 'ai') {
           return <AIMessage key={index} msg={msg} />;

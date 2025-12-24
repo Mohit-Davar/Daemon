@@ -1,32 +1,15 @@
 import * as vscode from 'vscode';
 
-export function getHTML(
-    webview: vscode.Webview,
-    extensionUri: vscode.Uri
-): string {
-    const scriptUri = webview.asWebviewUri(
-        vscode.Uri.joinPath(
-            extensionUri,
-            'src',
-            'view',
-            'dist',
-            'assets',
-            'index.js'
-        )
-    );
+export function getHTML(webview: vscode.Webview, extensionUri: vscode.Uri): string {
+  const scriptUri = webview.asWebviewUri(
+    vscode.Uri.joinPath(extensionUri, 'src', 'view', 'dist', 'assets', 'index.js'),
+  );
 
-    const cssUri = webview.asWebviewUri(
-        vscode.Uri.joinPath(
-            extensionUri,
-            'src',
-            'view',
-            'dist',
-            'assets',
-            'index.css'
-        )
-    );
+  const cssUri = webview.asWebviewUri(
+    vscode.Uri.joinPath(extensionUri, 'src', 'view', 'dist', 'assets', 'index.css'),
+  );
 
-    return /* html */ `
+  return /* html */ `
     <!DOCTYPE html>
     <html lang="en">
         <head>

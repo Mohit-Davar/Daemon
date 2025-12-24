@@ -1,0 +1,5 @@
+dist
+out
+node_modules
+src/view/dist
+src/view/node_modules

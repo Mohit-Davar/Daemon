@@ -2,15 +2,12 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash';
 import css from 'react-syntax-highlighter/dist/esm/languages/hljs/css';
 import go from 'react-syntax-highlighter/dist/esm/languages/hljs/go';
-import javascript
-  from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
-import markdown
-  from 'react-syntax-highlighter/dist/esm/languages/hljs/markdown';
+import markdown from 'react-syntax-highlighter/dist/esm/languages/hljs/markdown';
 import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import rust from 'react-syntax-highlighter/dist/esm/languages/hljs/rust';
-import typescript
-  from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/xml';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
