@@ -1,16 +1,27 @@
 export interface Message {
-  text: string;
+  id: string;
   sender: 'user' | 'ai';
+  text: string;
 }
 
-export interface ChatState {
+export interface Convo {
+  id: string;
+  title: string;
   messages: Message[];
+}
+
+export interface ConvoStore {
   query: string;
   loading: boolean;
+  convos: Convo[];
+  activeConvoID: string | null;
 
-  setQuery: (query: string) => void;
-  addMessage: (message: Message) => void;
-  appendToken: (token: text) => void;
-  sendQuery: () => void;
-  setLoading: (loading: boolean) => void;
+  setQuery(query: string): void;
+  setActiveConvo(id: string): void;
+
+  createConvo(): string;
+  sendQuery(): void;
+
+  appendToken(token: string): void;
+  finishStream(): void;
 }

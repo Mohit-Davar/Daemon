@@ -1,71 +1,103 @@
 import { create } from 'zustand';
 
-import type { ChatState } from '@/store/type';
+import type { Convo, ConvoStore } from '@/store/type';
+import { vscode } from '@/vscode';
 
-const vscode = acquireVsCodeApi();
+const generateId = () => crypto.randomUUID();
 
-export const useChatStore = create<ChatState>((set, get) => ({
-  messages: [],
+export const useChatStore = create<ConvoStore>((set, get) => ({
   query: '',
   loading: false,
+  convos: [],
+  activeConvoID: null,
 
   setQuery: (query) => set({ query }),
-  setLoading: (loading) => set({ loading }),
 
-  addMessage: (message) =>
-    set((state) => ({
-      messages: [...state.messages, message],
-    })),
+  setActiveConvo: (id) => set({ activeConvoID: id }),
 
-  appendToken: (token) =>
-    set((state) => {
-      const lastIndex = state.messages.length - 1;
-      const lastMsg = state.messages[lastIndex];
+  createConvo: () => {
+    const id = generateId();
 
-      if (!lastMsg || lastMsg.sender !== 'ai') {
-        return state;
-      }
+    const newConvo: Convo = {
+      id,
+      title: 'New Conversation',
+      messages: [],
+    };
 
-      // clone only what is needed
-      const messages = state.messages.slice();
-      messages[lastIndex] = {
-        ...lastMsg,
-        text: lastMsg.text + token,
-      };
+    set((state) => ({ convos: [newConvo, ...state.convos] }));
 
-      return { messages: messages };
-    }),
+    return id;
+  },
 
   sendQuery: () => {
-    const { query } = get();
+    const { query, activeConvoID } = get();
+    if (!query.trim() || !activeConvoID) return;
 
-    // user message
     set((state) => ({
-      messages: [...state.messages, { text: query, sender: 'user' }, { text: '', sender: 'ai' }],
-      query: '',
       loading: true,
+      query: '',
+      convos: state.convos.map((convo) =>
+        convo.id !== activeConvoID
+          ? convo
+          : {
+              ...convo,
+              messages: [
+                ...convo.messages,
+                { id: generateId(), sender: 'user', text: query },
+                { id: generateId(), sender: 'ai', text: '' },
+              ],
+            },
+      ),
     }));
 
     vscode.postMessage({
       command: 'query',
-      text: query,
+      data: { query, activeConvoID },
     });
   },
+
+  appendToken: (token: string) => {
+    const { activeConvoID } = get();
+    if (!activeConvoID) return;
+
+    set((state) => ({
+      convos: state.convos.map((convo) =>
+        convo.id !== activeConvoID
+          ? convo
+          : {
+              ...convo,
+              messages: convo.messages.map((msg, idx) =>
+                idx === convo.messages.length - 1 && msg.sender === 'ai'
+                  ? { ...msg, text: msg.text + token }
+                  : msg,
+              ),
+            },
+      ),
+    }));
+  },
+
+  finishStream: () => set({ loading: false }),
 }));
 
 window.addEventListener('message', (event) => {
-  const { text, command } = event.data;
-
+  const { command, text, id } = event.data;
   const store = useChatStore.getState();
+
   switch (command) {
     case 'stream':
       store.appendToken(text);
       break;
     case 'done':
-      store.setLoading(false);
+      store.finishStream();
+      break;
+    case 'change':
+      store.setActiveConvo(id);
       break;
     case 'error':
       console.error(text);
+      break;
+    default:
+      // ignore unknown commands
       break;
   }
 });

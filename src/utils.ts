@@ -25,3 +25,7 @@ export function getHTML(webview: vscode.Webview, extensionUri: vscode.Uri): stri
     </html>
 `;
 }
+
+export function getTitle(text: string): string {
+  return text.length > 20 ? `${text.slice(0, 20)}...` : text;
+}

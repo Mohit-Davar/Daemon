@@ -6,7 +6,7 @@ import { useChatStore } from '@/store/store';
 import type { Message } from '@/store/type';
 
 export function MessageList() {
-  const messages = useChatStore((state) => state.messages);
+  const messages = useChatStore((state) => state.convos[0].messages);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageLength = messages[messages.length - 1]?.text.length;
 
