@@ -1,10 +1,8 @@
 import { create } from 'zustand';
-
-import type { ChatStore, Convo } from '@/store/type';
-import { useUIStore } from '@/store/ui';
-import { vscode } from '@/vscode';
-
-const id = () => crypto.randomUUID();
+import type { ChatStore, Convo } from '@/types';
+import { useUIStore } from '@/store/ui-store';
+import { VSCode } from '@/lib/vscode';
+import { generateId } from '@/lib/utils';
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   query: '',
@@ -17,7 +15,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   createConvo: () => {
     const convo: Convo = {
-      id: id(),
+      id: generateId(),
       title: 'New Conversation',
       messages: [],
       createdAt: Date.now(),
@@ -35,8 +33,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const convo = convos.find((c) => c.id === activeID);
     if (!convo) return;
 
-    const userMsg = { id: id(), sender: 'user' as const, text: query };
-    const aiMsg = { id: id(), sender: 'assistant' as const, text: '' };
+    const userMsg = { id: generateId(), sender: 'user' as const, text: query };
+    const aiMsg = { id: generateId(), sender: 'assistant' as const, text: '' };
 
     useUIStore.getState().toggleLoading();
 
@@ -56,7 +54,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
     const isNewConvo = convo.messages.length === 0;
 
-    vscode.postMessage({
+    VSCode.postMessage({
       command: 'query',
       data: {
         convo: isNewConvo

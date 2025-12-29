@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-
-import type { UIStore } from '@/store/type';
+import type { UIStore } from '@/types';
 
 export const useUIStore = create<UIStore>((set) => ({
   historyOpen: false,

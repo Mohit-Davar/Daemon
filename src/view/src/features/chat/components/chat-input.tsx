@@ -2,15 +2,16 @@ import { useRef } from 'react';
 
 import { ArrowUp, Plus } from 'lucide-react';
 
-import { handleGrow, handleSend } from '@/components/Input/handlers';
-import { useChatStore } from '@/store/chat';
-import { useUIStore } from '@/store/ui';
+import { handleGrow, handleSend } from '@/features/chat/lib/input-handlers';
+import { useChatStore } from '@/features/chat/store/chat-store';
+import { useUIStore } from '@/store/ui-store';
 
 export function ChatInput() {
   const query = useChatStore((state) => state.query);
-  const loading = useUIStore((state) => state.loading);
   const setQuery = useChatStore((state) => state.setQuery);
   const sendQuery = useChatStore((state) => state.sendQuery);
+  const loading = useUIStore((state) => state.loading);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (

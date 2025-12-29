@@ -1,10 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-
 import { ArrowDown, Sparkles } from 'lucide-react';
 
-import { AIMessage } from '@/components/Messages/AI/AI';
-import { UserMessage } from '@/components/Messages/User';
-import { useChatStore } from '@/store/chat';
+import { useChatStore } from '../store/chat-store';
+import { MessageItem } from './message-item';
+import { cn } from '@/lib/utils';
 
 export function MessageList() {
   const convos = useChatStore((state) => state.convos);
@@ -75,13 +74,9 @@ export function MessageList() {
         className="flex flex-col gap-6 p-4 w-full h-full overflow-y-auto scroll-smooth"
       >
         <div className="flex flex-col gap-6 mx-auto pb-4 w-full max-w-4xl">
-          {messages.map((msg) =>
-            msg.sender === 'assistant' ? (
-              <AIMessage key={msg.id} msg={msg} />
-            ) : (
-              <UserMessage key={msg.id} msg={msg} />
-            ),
-          )}
+          {messages.map((msg) => (
+            <MessageItem key={msg.id} msg={msg} />
+          ))}
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -93,7 +88,9 @@ export function MessageList() {
             setAutoScroll(true);
             scrollToBottom('smooth');
           }}
-          className="right-4 bottom-4 slide-in-from-bottom-2 z-10 absolute bg-[var(--vscode-button-background)] hover:bg-[var(--vscode-button-hoverBackground)] shadow-lg p-2 rounded-full text-[var(--vscode-button-foreground)] transition-all animate-in fade-in"
+          className={cn(
+            'right-4 bottom-4 slide-in-from-bottom-2 z-10 absolute bg-[var(--vscode-button-background)] hover:bg-[var(--vscode-button-hoverBackground)] shadow-lg p-2 rounded-full text-[var(--vscode-button-foreground)] transition-all animate-in fade-in',
+          )}
         >
           <ArrowDown size={20} />
         </button>

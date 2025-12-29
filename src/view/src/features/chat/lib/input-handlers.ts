@@ -1,4 +1,5 @@
-import type { ChatStore } from '@/store/type';
+import type { ChatStore } from '@/types';
+import type React from 'react';
 
 export function handleGrow(ref: React.RefObject<HTMLTextAreaElement | null>) {
   const el = ref.current;

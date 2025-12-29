@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-import { useChatStore } from '@/store/chat';
-import { useUIStore } from '@/store/ui';
-import { vscode } from '@/vscode';
+import { useChatStore } from '../store/chat-store';
+import { useUIStore } from '@/store/ui-store';
+import { VSCode } from '@/lib/vscode';
 
 export function useMessageHandler() {
   useEffect(() => {
@@ -16,10 +16,11 @@ export function useMessageHandler() {
         case 'streamDone':
           uiStore.toggleLoading();
           break;
-        case 'addChat':
+        case 'addChat': {
           const id = chatStore.createConvo();
           chatStore.setActiveConvo(id);
           break;
+        }
         case 'toggleHistory':
           uiStore.toggleHistory();
           chatStore.setConvos(data.data.convos);
@@ -44,7 +45,7 @@ export function useMessageHandler() {
     window.addEventListener('message', handleMessage);
 
     // Signal backend that we are ready
-    vscode.postMessage({
+    VSCode.postMessage({
       command: 'webviewLoaded',
     });
 

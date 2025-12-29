@@ -1,6 +1,6 @@
 import type { Components } from 'react-markdown';
 
-import { CodeBlock } from '@/components/Messages/AI/codeBlock';
+import { CodeBlock } from '@/features/chat/components/code-block';
 
 export const markdownComponents: Components = {
   code: CodeBlock,

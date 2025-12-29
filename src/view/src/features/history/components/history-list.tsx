@@ -1,11 +1,12 @@
 import { ChevronRight, MessageCircleDashedIcon } from 'lucide-react';
 
-import { formatRelativeDate } from '@/components/History/utils';
-import { useChatStore } from '@/store/chat';
-import type { Convo } from '@/store/type';
-import { useUIStore } from '@/store/ui';
+import { useChatStore } from '@/features/chat/store/chat-store';
+import { formatRelativeDate } from '@/features/history/lib/date-utils';
+import { cn } from '@/lib/utils';
+import { useUIStore } from '@/store/ui-store';
+import type { Convo } from '@/types';
 
-export function History() {
+export function HistoryList() {
   const historyOpen = useUIStore((s) => s.historyOpen);
   const toggleHistory = useUIStore((s) => s.toggleHistory);
 
@@ -19,7 +20,10 @@ export function History() {
 
   return (
     <div
-      className={`fixed inset-x-0 top-0 w-full max-h-64 bg-[var(--bg-editor)] shadow-2xl z-50 transform transition-transform duration-300 ${historyOpen ? 'translate-y-0' : '-translate-y-full'}`}
+      className={cn(
+        'top-0 z-50 fixed inset-x-0 bg-[var(--bg-editor)] shadow-2xl w-full max-h-64 transition-transform duration-300 transform',
+        historyOpen ? 'translate-y-0' : '-translate-y-full',
+      )}
     >
       <div className="px-2 pb-2 overflow-y-auto">
         {sorted.length === 0 ? (
@@ -37,12 +41,12 @@ export function History() {
                     setActiveConvo(convo.id);
                     toggleHistory();
                   }}
-                  className={`w-full cursor-pointer flex items-center gap-3 p-3 rounded-md text-sm transition-all group
-                      ${
-                        isActive
-                          ? 'bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]'
-                          : 'hover:bg-[var(--hover-bg)]'
-                      }`}
+                  className={cn(
+                    'group flex items-center gap-3 p-3 rounded-md w-full text-sm transition-all cursor-pointer',
+                    isActive
+                      ? 'bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]'
+                      : 'hover:bg-[var(--hover-bg)]',
+                  )}
                 >
                   <MessageCircleDashedIcon size={16} className="shrink-0" />
                   <div className="flex-1 text-left">

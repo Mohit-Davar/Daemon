@@ -1,9 +1,29 @@
 import { User } from 'lucide-react';
+import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 
-import { CopyButton } from '@/components/UI/CopyButton';
-import type { Message } from '@/store/type';
+import { CopyButton } from '@/components/ui/copy-button';
+import { markdownComponents } from '@/features/chat/components/markdown-components';
+import type { Message } from '@/types';
 
-export function UserMessage({ msg }: { msg: Message }) {
+function AIMessage({ msg }: { msg: Message }) {
+  return (
+    <div className="mx-2 overflow-hidden">
+      <div className="prose-invert text-[var(--fg-editor)] leading-relaxed prose">
+        <Markdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={markdownComponents}
+        >
+          {msg.text}
+        </Markdown>
+      </div>
+    </div>
+  );
+}
+
+function UserMessage({ msg }: { msg: Message }) {
   return (
     <div className="flex justify-end w-full">
       <div className="group flex flex-row-reverse gap-3">
@@ -26,4 +46,11 @@ export function UserMessage({ msg }: { msg: Message }) {
       </div>
     </div>
   );
+}
+
+export function MessageItem({ msg }: { msg: Message }) {
+  if (msg.sender === 'assistant') {
+    return <AIMessage msg={msg} />;
+  }
+  return <UserMessage msg={msg} />;
 }

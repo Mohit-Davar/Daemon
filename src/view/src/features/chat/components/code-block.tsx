@@ -1,7 +1,7 @@
 import type { Components } from 'react-markdown';
 
-import { atomOneDark, SyntaxHighlighter } from '@/components/Messages/AI/syntaxHighlighter';
-import { CopyButton } from '@/components/UI/CopyButton';
+import { CopyButton } from '@/components/ui/copy-button';
+import { atomOneDark, SyntaxHighlighter } from '@/features/chat/lib/syntax-highlighter';
 
 type CodeProps = NonNullable<Components['code']>;
 
