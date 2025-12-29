@@ -1,11 +1,9 @@
 {
-  "name": "cursor",
-  "displayName": "Cursor",
+  "name": "daemon",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.107.0"
   },
-  "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -27,6 +25,32 @@
         }
       ]
     },
+    "commands": [
+      {
+        "command": "daemon.newConversation",
+        "title": "New",
+        "icon": "$(add)"
+      },
+      {
+        "command": "daemon.chatHistory",
+        "title": "History",
+        "icon": "$(history)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "daemon.newConversation",
+          "when": "view == daemonView",
+          "group": "navigation"
+        },
+        {
+          "command": "daemon.chatHistory",
+          "when": "view == daemonView",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "Daemon",
       "properties": {
@@ -38,26 +62,24 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run package",
-    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
+    "build": "pnpm check-types && node esbuild.js --production && pnpm --filter view build",
     "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.js --watch",
-    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
-    "check-types": "tsc --noEmit",
+    "watch:ext": "node esbuild.js --watch",
+    "watch:view": "pnpm --filter view dev",
     "lint": "eslint .",
-    "test": "vscode-test",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check-types": "tsc --noEmit",
+    "test": "vscode-test"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "22.x",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/vscode": "^1.107.0",
+    "@vitejs/plugin-react-swc": "^4.2.2",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.1",
@@ -65,14 +87,17 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "globals": "^15.8.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.48.1",
+    "vite": "^7.2.4"
   },
   "dependencies": {
+    "daemon": "link:",
     "groq-sdk": "^0.37.0"
   }
 }

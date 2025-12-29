@@ -1,4 +1,5 @@
-import type { ChatState } from '@/store/type';
+import type { ChatStore } from '@/types';
+import type React from 'react';
 
 export function handleGrow(ref: React.RefObject<HTMLTextAreaElement | null>) {
   const el = ref.current;
@@ -12,7 +13,7 @@ export function handleGrow(ref: React.RefObject<HTMLTextAreaElement | null>) {
 export function handleSend(
   loading: boolean,
   ref: React.RefObject<HTMLTextAreaElement | null>,
-  sendQuery: ChatState['sendQuery'],
+  sendQuery: ChatStore['sendQuery'],
 ) {
   if (loading) {
     return;

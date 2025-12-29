@@ -1,7 +1,7 @@
 import type { Components } from 'react-markdown';
 
-import { atomOneDark, SyntaxHighlighter } from '@/components/Messages/AI/syntaxHighlighter';
-import { CopyButton } from '@/components/UI/CopyButton';
+import { CopyButton } from '@/components/ui/copy-button';
+import { atomOneDark, SyntaxHighlighter } from '@/features/chat/lib/syntax-highlighter';
 
 type CodeProps = NonNullable<Components['code']>;
 
@@ -13,7 +13,7 @@ export const CodeBlock: CodeProps = ({ children, className, ...rest }) => {
     return (
       <code
         {...rest}
-        className="bg-[var(--bg-editor)] p-1 border border-[var(--vscode-widget-border)] rounded font-mono text-sm"
+        className="bg-[var(--vscode-textCodeBlock-background)] px-1.5 py-0.5 border border-[var(--border-color)] rounded-md font-mono text-[var(--vscode-textPreformat-foreground)] text-sm"
       >
         {children}
       </code>
@@ -21,9 +21,9 @@ export const CodeBlock: CodeProps = ({ children, className, ...rest }) => {
   }
 
   return (
-    <div className="my-4 rounded-md w-full overflow-hidden">
-      <div className="flex justify-between items-center bg-[var(--bg-editor)] px-4 py-2 font-mono text-xs">
-        <span>{match[1]}</span>
+    <div className="my-4 border border-[var(--border-color)] rounded-lg overflow-hidden">
+      <div className="flex justify-between items-center bg-[var(--vscode-editor-inactiveSelectionBackground)] px-3 py-1.5 border-[var(--border-color)] border-b font-mono text-[var(--secondary-fg)] text-xs">
+        <span className="font-semibold">{match[1]}</span>
         <CopyButton content={codeString} />
       </div>
 
@@ -34,7 +34,7 @@ export const CodeBlock: CodeProps = ({ children, className, ...rest }) => {
         customStyle={{
           margin: 0,
           padding: '1rem',
-          background: 'var(--bg-editor)',
+          background: 'var(--vscode-editor-background)',
           fontSize: '0.875rem',
         }}
         codeTagProps={{

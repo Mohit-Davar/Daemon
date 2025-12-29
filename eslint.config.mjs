@@ -1,41 +1,22 @@
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import configPrettier from 'eslint-config-prettier';
+import pluginPrettier from 'eslint-plugin-prettier';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
-import pluginPrettier from 'eslint-plugin-prettier';
-import configPrettier from 'eslint-config-prettier';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
 import js from '@eslint/js';
 
-export default tseslint.config(
+export default [
   {
-    // Global ignores from .eslintignore
+    // Global ignores
     ignores: ['dist', 'out', 'node_modules', 'src/view/dist', 'src/view/node_modules'],
   },
 
-  // Base configs
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-
-  // Custom rules for the whole project
+  // JS files
   {
-    rules: {
-      '@typescript-eslint/naming-convention': [
-        'warn',
-        {
-          selector: 'import',
-          format: ['camelCase', 'PascalCase'],
-        },
-      ],
-      curly: 'warn',
-      eqeqeq: 'warn',
-      'no-throw-literal': 'warn',
-    },
-  },
-
-  // Config for extension files (Node.js)
-  {
-    files: ['src/**/*.ts', 'esbuild.js', '.vscode-test.mjs', 'eslint.config.mjs'],
-    ignores: ['src/view/**'],
+    files: ['**/*.js', '**/*.mjs'],
+    ...js.configs.recommended,
     languageOptions: {
       globals: {
         ...globals.node,
@@ -43,27 +24,39 @@ export default tseslint.config(
     },
   },
 
-  // Config for view files (React/Browser)
+  // Base TS config for all TS files
+  ...tseslint.configs.recommended,
+
+  // Override for extension files for type-aware linting
   {
-    files: ['src/view/**/*.{ts,tsx}'],
+    files: ['src/**/*.ts'],
+    ignores: ['src/view/**'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+
+  // Combined, type-aware config for React view files
+  {
+    files: ['src/view/src/**/*.{ts,tsx}'],
     plugins: {
       react: pluginReact,
       'react-hooks': pluginReactHooks,
     },
     languageOptions: {
+      parserOptions: {
+        project: './tsconfig.app.json',
+        tsconfigRootDir: `${import.meta.dirname}/src/view`,
+      },
       globals: {
         ...globals.browser,
       },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
     },
     settings: {
-      react: {
-        version: 'detect',
-      },
+      react: { version: 'detect' },
     },
     rules: {
       ...pluginReact.configs.recommended.rules,
@@ -73,15 +66,24 @@ export default tseslint.config(
     },
   },
 
-  // Prettier config. This needs to be last.
-  configPrettier,
-
+  // Global rules for all TS files
   {
-    plugins: {
-      prettier: pluginPrettier,
-    },
+    files: ['**/*.ts', '**/*.tsx'],
     rules: {
-      'prettier/prettier': 'warn',
+      '@typescript-eslint/naming-convention': [
+        'warn',
+        { selector: 'import', format: ['camelCase', 'PascalCase'] },
+      ],
+      curly: 'warn',
+      eqeqeq: 'warn',
+      'no-throw-literal': 'warn',
     },
   },
-);
+
+  // Prettier config
+  configPrettier,
+  {
+    plugins: { prettier: pluginPrettier },
+    rules: { 'prettier/prettier': 'warn' },
+  },
+];
