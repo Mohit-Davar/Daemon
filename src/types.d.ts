@@ -1,17 +1,20 @@
-interface Messages {
+export type Sender = 'user' | 'assistant';
+
+export type Message = {
+  id: string;
+  sender: Sender;
   text: string;
-  sender: 'user' | 'ai';
-}
-interface Convos {
+};
+
+export type Convo = {
   id: string;
   title: string;
-  messages: Messages[];
-}
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
+};
 
-interface QueryMessage {
+interface WebviewMessage {
   command: string;
-  data: {
-    query: string;
-    ID: string;
-  };
+  data?: unknown;
 }

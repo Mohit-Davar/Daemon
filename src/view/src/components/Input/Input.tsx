@@ -3,11 +3,12 @@ import { useRef } from 'react';
 import { ArrowUp, Plus } from 'lucide-react';
 
 import { handleGrow, handleSend } from '@/components/Input/handlers';
-import { useChatStore } from '@/store/store';
+import { useChatStore } from '@/store/chat';
+import { useUIStore } from '@/store/ui';
 
 export function ChatInput() {
   const query = useChatStore((state) => state.query);
-  const loading = useChatStore((state) => state.loading);
+  const loading = useUIStore((state) => state.loading);
   const setQuery = useChatStore((state) => state.setQuery);
   const sendQuery = useChatStore((state) => state.sendQuery);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -36,12 +37,16 @@ export function ChatInput() {
       {/* BUTTONS */}
       <div className="flex justify-between items-center mt-2">
         {/* ADD FILE */}
-        <button className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer">
+        <button
+          className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer"
+          title="Add File"
+        >
           <Plus size={16} />
         </button>
 
         {/* SEND MESSAGE */}
         <button
+          title="Send"
           onClick={() => {
             handleSend(loading, textareaRef, sendQuery);
           }}

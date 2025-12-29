@@ -1,11 +1,14 @@
 import Groq from 'groq-sdk';
 
-export async function* queryLLM(apiKey: string, query: string): AsyncGenerator<string> {
+export async function* queryLLM(
+  apiKey: string,
+  messages: Groq.Chat.Completions.ChatCompletionMessageParam[],
+): AsyncGenerator<string> {
   const groq = new Groq({ apiKey });
 
   const stream = await groq.chat.completions.create({
     model: 'llama-3.1-8b-instant',
-    messages: [{ role: 'user', content: query }],
+    messages,
     stream: true,
   });
 

@@ -5,14 +5,16 @@ import { getHTML } from '@/utils';
 
 export class DaemonView implements vscode.WebviewViewProvider {
   public static readonly viewId = 'daemonView';
-  private controller?: ConvoController;
+  private _view?: vscode.WebviewView;
+  private _controller?: ConvoController;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
     private readonly context: vscode.ExtensionContext,
   ) {}
 
-  resolveWebviewView(webviewView: vscode.WebviewView): void {
+  public resolveWebviewView(webviewView: vscode.WebviewView): void {
+    this._view = webviewView;
     const { webview } = webviewView;
 
     webview.options = {
@@ -21,18 +23,18 @@ export class DaemonView implements vscode.WebviewViewProvider {
     };
 
     webview.html = getHTML(webview, this.extensionUri);
-    this.controller = new ConvoController(this.context, webview);
+    this._controller = new ConvoController(this.context, webview);
 
     webview.onDidReceiveMessage(async (message) => {
-      const { command, data } = message;
-      switch (command) {
-        case 'query':
-          await this.controller?.handleQuery(data);
-          break;
-        default:
-          // ignore unknown commands
-          break;
+      if (this._controller) {
+        await this._controller.handleMessage(message);
       }
     });
+  }
+
+  public postMessage(message: WebviewMessage) {
+    if (this._view) {
+      this._view.webview.postMessage(message);
+    }
   }
 }

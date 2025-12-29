@@ -7,14 +7,16 @@ import type { Message } from '@/store/type';
 
 export function AIMessage({ msg }: { msg: Message }) {
   return (
-    <div className="p-3 w-full">
-      <Markdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={markdownComponents}
-      >
-        {msg.text}
-      </Markdown>
+    <div className="mx-2 overflow-hidden">
+      <div className="prose-invert text-[var(--fg-editor)] leading-relaxed prose">
+        <Markdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={markdownComponents}
+        >
+          {msg.text}
+        </Markdown>
+      </div>
     </div>
   );
 }

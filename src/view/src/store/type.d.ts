@@ -1,27 +1,39 @@
-export interface Message {
-  id: string;
-  sender: 'user' | 'ai';
-  text: string;
-}
+export type Sender = 'user' | 'assistant';
 
-export interface Convo {
+export type Message = {
+  id: string;
+  sender: Sender;
+  text: string;
+};
+
+export type Convo = {
   id: string;
   title: string;
   messages: Message[];
-}
+  createdAt: number;
+  updatedAt: number;
+};
 
-export interface ConvoStore {
+export type ChatStore = {
   query: string;
-  loading: boolean;
   convos: Convo[];
-  activeConvoID: string | null;
+  activeID: string | null;
 
-  setQuery(query: string): void;
-  setActiveConvo(id: string): void;
+  setQuery: (q: string) => void;
+  sendQuery: () => void;
 
-  createConvo(): string;
-  sendQuery(): void;
+  setConvos: (convos: Convo[]) => void;
+  createConvo: () => string;
 
-  appendToken(token: string): void;
-  finishStream(): void;
-}
+  setActiveConvo: (id: string) => void;
+
+  appendToken: (token: string) => void;
+};
+
+export type UIStore = {
+  historyOpen: boolean;
+  loading: boolean;
+
+  toggleLoading: () => void;
+  toggleHistory: () => void;
+};

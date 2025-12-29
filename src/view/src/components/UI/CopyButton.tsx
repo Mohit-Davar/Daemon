@@ -14,10 +14,11 @@ export function CopyButton({ content }: { content: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer"
+      className="p-2 rounded-md text-[var(--secondary-fg)] transition-colors cursor-pointer"
       aria-label={copied ? 'Copied' : 'Copy content'}
+      title={copied ? 'Copied' : 'Copy'}
     >
-      {copied ? <Check size={10} /> : <Copy size={10} />}
+      {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
     </button>
   );
 }

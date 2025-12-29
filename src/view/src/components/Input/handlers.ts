@@ -1,4 +1,4 @@
-import type { ConvoStore } from '@/store/type';
+import type { ChatStore } from '@/store/type';
 
 export function handleGrow(ref: React.RefObject<HTMLTextAreaElement | null>) {
   const el = ref.current;
@@ -12,7 +12,7 @@ export function handleGrow(ref: React.RefObject<HTMLTextAreaElement | null>) {
 export function handleSend(
   loading: boolean,
   ref: React.RefObject<HTMLTextAreaElement | null>,
-  sendQuery: ConvoStore['sendQuery'],
+  sendQuery: ChatStore['sendQuery'],
 ) {
   if (loading) {
     return;
