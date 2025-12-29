@@ -1,20 +1,26 @@
 export type Sender = 'user' | 'assistant';
 
-export type Message = {
+export interface Message {
   id: string;
   sender: Sender;
   text: string;
-};
+}
 
-export type Convo = {
+export interface Convo {
   id: string;
   title: string;
   messages: Message[];
   createdAt: number;
   updatedAt: number;
-};
+}
 
-interface WebviewMessage {
+export interface WebviewMessage {
   command: string;
   data?: unknown;
+  text?: string;
+}
+
+export interface LLMMessage {
+  role: Sender;
+  content: string;
 }
