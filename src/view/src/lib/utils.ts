@@ -8,3 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function generateId() {
   return crypto.randomUUID();
 }
+
+export function generateTitle(text: string): string {
+  return text.length > 20 ? `${text.slice(0, 20)}...` : text;
+}

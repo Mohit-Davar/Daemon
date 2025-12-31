@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
 
-import { ConfigManager } from '@/lib/config';
-import { AIService } from '@/services/ai-service';
 import { StateManager } from '@/services/state-manager';
 import { Convo, WebviewMessage } from '@/types';
+import { streamResponse } from '@/lib/utils';
 
 export class ChatService {
   private convos: Convo[];
@@ -35,18 +34,9 @@ export class ChatService {
     });
   }
 
-  private async handleQuery(data: WebviewMessage['data']) {
+  private async handleQuery(data: unknown) {
     // @ts-expect-error IDK
     const { convo, messages } = data;
-
-    const apiKey = ConfigManager.getApiKey();
-    if (!apiKey) {
-      this.webview.postMessage({
-        command: 'error',
-        text: 'API key not found',
-      });
-      return;
-    }
 
     let currentConvo = this.convos.find((c) => c.id === convo.id);
     // Create new conversation if it doesn't exist
@@ -71,34 +61,45 @@ export class ChatService {
     currentConvo.messages.push(...messages);
     currentConvo.updatedAt = Date.now();
 
-    const messagesForLLM = currentConvo.messages.slice(0, -1).map((m) => ({
+    const context = currentConvo.messages.slice(0, -1).map((m) => ({
       role: m.sender,
       content: m.text,
     }));
 
-    // Start Streaming
-    const aiService = new AIService(apiKey);
-    try {
-      for await (const token of aiService.streamResponse(messagesForLLM)) {
-        const last = currentConvo.messages.at(-1);
-        if (last && last.sender === 'assistant') {
-          last.text += token;
-        }
-        this.webview.postMessage({
-          command: 'stream',
-          text: token,
-        });
-      }
-
-      await this.stateManager.saveConvos(this.convos);
-      this.webview.postMessage({
-        command: 'streamDone',
-      });
-    } catch {
+    const lastMessage = currentConvo.messages.at(-1);
+    if (!lastMessage || lastMessage.sender !== 'assistant') {
       this.webview.postMessage({
         command: 'error',
-        text: 'Query failed',
+        text: 'Internal Server Error: no assistant message to stream to.',
       });
+      return;
     }
+
+    await streamResponse(
+      'http://localhost:3000/api/chat',
+      { messages: context },
+      {
+        onToken: (token: string) => {
+          lastMessage.text += token;
+          this.webview.postMessage({
+            command: 'stream',
+            text: token,
+          });
+        },
+        onDone: async () => {
+          await this.stateManager.saveConvos(this.convos);
+          this.webview.postMessage({
+            command: 'streamDone',
+          });
+        },
+        onError: (error: Error) => {
+          console.error('Error during server communication:', error);
+          this.webview.postMessage({
+            command: 'error',
+            text: 'Internal Server Error',
+          });
+        },
+      },
+    );
   }
 }

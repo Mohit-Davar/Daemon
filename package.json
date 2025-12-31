@@ -97,7 +97,6 @@
     "vite": "^7.2.4"
   },
   "dependencies": {
-    "daemon": "link:",
-    "groq-sdk": "^0.37.0"
+    "daemon": "link:"
   }
 }
