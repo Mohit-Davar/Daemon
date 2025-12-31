@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import type { ChatStore, Convo } from '@/types';
-import { useUIStore } from '@/store/ui-store';
+
+import { generateId, generateTitle } from '@/lib/utils';
 import { VSCode } from '@/lib/vscode';
-import { generateId } from '@/lib/utils';
+import { useUIStore } from '@/store/ui-store';
+import type { ChatStore, Convo } from '@/types';
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   query: '',
@@ -14,9 +15,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   setActiveConvo: (id) => set({ activeID: id }),
 
   createConvo: () => {
+    const { query } = get();
     const convo: Convo = {
       id: generateId(),
-      title: 'New Conversation',
+      title: generateTitle(query),
       messages: [],
       createdAt: Date.now(),
       updatedAt: Date.now(),
