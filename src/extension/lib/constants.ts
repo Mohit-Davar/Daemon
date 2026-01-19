@@ -4,11 +4,8 @@ export const CONSTANTS = {
     NEW_CONVERSATION: 'daemon.newConversation',
     CHAT_HISTORY: 'daemon.chatHistory',
   },
-  CONFIG: {
-    SECTION: 'daemon',
-    API_KEY: 'groq.apiKey',
-  },
   STORAGE: {
     CONVOS: 'convos',
+    LOGGED_OUT: 'loggedOut',
   },
 } as const;

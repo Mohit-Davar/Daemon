@@ -40,7 +40,9 @@ export type ChatStore = {
 export type UIStore = {
   historyOpen: boolean;
   loading: boolean;
+  error: string | null;
 
   toggleLoading: () => void;
   toggleHistory: () => void;
+  setError: (msg: string | null) => void;
 };

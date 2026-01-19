@@ -19,13 +19,11 @@ export class ChatService {
   public async handleMessage(message: WebviewMessage) {
     switch (message.command) {
       case 'query':
-        await this.handleQuery(message.data);
-        break;
+        return await this.handleQuery(
+          message.data as { convo: Convo; messages: Convo['messages'] },
+        );
       case 'webviewLoaded':
-        this.hydrateWebView();
-        break;
-      default:
-        console.error('Unknown Command', message.command);
+        return this.hydrateWebView();
     }
   }
 
@@ -36,75 +34,44 @@ export class ChatService {
     });
   }
 
-  private async handleQuery(data: unknown) {
-    // @ts-expect-error IDK
+  private async handleQuery(data: { convo: Convo; messages: Convo['messages'] }) {
     const { convo, messages } = data;
+    const accessToken = await this.authService.getAccessToken();
 
-    let currentConvo = this.convos.find((c) => c.id === convo.id);
-    // Create new conversation if it doesn't exist
-    if (!currentConvo) {
-      if (!convo.id || !convo.title || !convo.createdAt) {
-        this.webview.postMessage({
-          command: 'error',
-          text: 'Invalid conversation data',
-        });
-        return;
-      }
-
-      currentConvo = {
-        id: convo.id,
-        title: convo.title,
-        messages: [],
-        createdAt: convo.createdAt,
-        updatedAt: convo.createdAt,
-      };
-      this.convos.push(currentConvo);
+    if (!accessToken) {
+      this.webview.postMessage({ command: 'error', text: 'Sign in to chat' });
+      return;
     }
-    currentConvo.messages.push(...messages);
-    currentConvo.updatedAt = Date.now();
 
-    const context = currentConvo.messages.slice(0, -1).map((m) => ({
+    // Get or create conversation
+    let current = this.convos.find((c) => c.id === convo.id);
+    if (!current) {
+      current = { ...convo, messages: [] };
+      this.convos.push(current);
+    }
+
+    current.messages.push(...messages);
+    const assistantMsg = current.messages.at(-1);
+    const history = current.messages.slice(0, -1).map((m) => ({
       role: m.sender,
       content: m.text,
     }));
 
-    const lastMessage = currentConvo.messages.at(-1);
-    if (!lastMessage || lastMessage.sender !== 'assistant') {
-      this.webview.postMessage({
-        command: 'error',
-        text: 'Internal Server Error: no assistant message to stream to.',
-      });
-      return;
-    }
-
-    const accessToken = await this.authService.getAccessToken();
-
     await streamResponse(
       'http://localhost:3000/api/chat',
-      { messages: context },
+      { messages: history },
       {
-        onToken: (token: string) => {
-          lastMessage.text += token;
-          this.webview.postMessage({
-            command: 'stream',
-            text: token,
-          });
+        onToken: (t) => {
+          if (assistantMsg) assistantMsg.text += t;
+          this.webview.postMessage({ command: 'stream', text: t });
         },
-        onDone: async () => {
-          await this.stateManager.saveConvos(this.convos);
-          this.webview.postMessage({
-            command: 'streamDone',
-          });
+        onDone: () => {
+          this.stateManager.saveConvos(this.convos);
+          this.webview.postMessage({ command: 'streamDone' });
         },
-        onError: (error: Error) => {
-          console.error('Error during server communication:', error);
-          this.webview.postMessage({
-            command: 'error',
-            text: 'Internal Server Error',
-          });
-        },
+        onError: () => this.webview.postMessage({ command: 'error', text: 'Chat failed' }),
       },
-      accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      { Authorization: `Bearer ${accessToken}` },
     );
   }
 }

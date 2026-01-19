@@ -1,81 +1,115 @@
 import * as vscode from 'vscode';
-
 import { User, WebviewMessage } from '@/extension/types';
+import { StateManager } from '@/extension/services/state-manager';
 
 export class AuthService {
-  constructor(private readonly webview: vscode.Webview) {}
+  constructor(
+    private readonly webview: vscode.Webview,
+    private readonly stateManager: StateManager,
+  ) {}
 
-  public async handleMessage(message: WebviewMessage) {
+  async handleMessage(message: WebviewMessage) {
     switch (message.command) {
       case 'login':
-        await this.handleLogin();
-        break;
+        return this.login();
+
       case 'logout':
-        await this.handleLogout();
-        break;
+        return this.logout();
+
       case 'checkAuth':
-        await this.handleCheckAuth();
-        break;
-      default:
-        console.error('Unknown Auth Command', message.command);
+        return this.checkAuth();
     }
   }
 
-  private async handleLogin() {
+  private async login() {
     try {
       const session = await vscode.authentication.getSession('github', ['read:user'], {
         createIfNone: true,
       });
-      if (session) {
-        const user: User = {
-          id: session.account.id,
-          username: session.account.label,
-          photo: `https://unavatar.io/github/${session.account.label}`,
-        };
-        this.webview.postMessage({ command: 'authSuccess', data: user });
-      }
-    } catch (error) {
-      console.error('Login failed', error);
-      this.webview.postMessage({ command: 'authSuccess', data: null });
+
+      if (!session) return this.sendUser(null);
+
+      await this.stateManager.setLoggedOut(false);
+      const user = this.buildUser(session);
+      await this.syncUser(user, session.accessToken);
+      this.sendUser(user);
+    } catch (e) {
+      console.error('Login failed', e);
+      this.sendUser(null);
     }
   }
 
-  private async handleLogout() {
-    // VS Code doesn't have a direct "sign out" for all sessions via API easily without provider-specific logic
-    // but we can just notify our UI. The user can sign out via the Accounts menu in VS Code.
-    this.webview.postMessage({ command: 'authSuccess', data: null });
+  private async logout() {
+    await this.stateManager.setLoggedOut(true);
+    this.sendUser(null);
   }
 
-  private async handleCheckAuth() {
+  private async checkAuth() {
+    if (this.stateManager.getLoggedOut()) {
+      return this.sendUser(null);
+    }
+
     try {
       const session = await vscode.authentication.getSession('github', ['read:user'], {
         createIfNone: false,
       });
+
       if (session) {
-        const user: User = {
-          id: session.account.id,
-          username: session.account.label,
-          photo: `https://unavatar.io/github/${session.account.label}`,
-        };
-        this.webview.postMessage({ command: 'authSuccess', data: user });
+        const user = this.buildUser(session);
+        await this.syncUser(user, session.accessToken);
+        this.sendUser(user);
       } else {
-        this.webview.postMessage({ command: 'authSuccess', data: null });
+        this.sendUser(null);
       }
-    } catch (error) {
-      console.error('Auth check failed', error);
-      this.webview.postMessage({ command: 'authSuccess', data: null });
+    } catch (e) {
+      console.error('Auth check failed', e);
+      this.sendUser(null);
     }
   }
 
-  public async getAccessToken(): Promise<string | null> {
+  async getAccessToken(): Promise<string | null> {
     try {
       const session = await vscode.authentication.getSession('github', ['read:user'], {
         createIfNone: false,
       });
       return session?.accessToken ?? null;
-    } catch (error) {
-      console.error('Failed to get access token', error);
+    } catch (e) {
+      console.error('Token fetch failed', e);
       return null;
     }
+  }
+
+  private async syncUser(user: User, token: string) {
+    try {
+      await fetch('http://localhost:3000/api/auth/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: user.username,
+          photo: user.photo,
+        }),
+      });
+    } catch (e) {
+      console.error('Sync failed', e);
+    }
+  }
+
+  private buildUser(session: vscode.AuthenticationSession): User {
+    const username = session.account.label;
+    return {
+      id: session.account.id,
+      username,
+      photo: `https://unavatar.io/github/${username}`,
+    };
+  }
+
+  private sendUser(user: User | null) {
+    this.webview.postMessage({
+      command: 'authSuccess',
+      data: user,
+    });
   }
 }

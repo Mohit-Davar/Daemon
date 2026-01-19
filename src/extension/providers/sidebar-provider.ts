@@ -30,25 +30,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webview.html = getWebviewContent(webview, this.extensionUri);
 
     const stateManager = new StateManager(this.context);
-    this._authService = new AuthService(webview);
+    this._authService = new AuthService(webview, stateManager);
     this._chatService = new ChatService(stateManager, webview, this._authService);
 
     webview.onDidReceiveMessage(async (message: WebviewMessage) => {
-      const authCommands = ['login', 'logout', 'checkAuth'];
-      if (authCommands.includes(message.command)) {
-        if (this._authService) {
-          await this._authService.handleMessage(message);
-        }
-      } else if (this._chatService) {
-        await this._chatService.handleMessage(message);
-      }
+      await this._authService?.handleMessage(message);
+      await this._chatService?.handleMessage(message);
     });
   }
 
   // Helper method to send messages to the webview from commands
   public postMessage(message: WebviewMessage) {
-    if (this._view) {
-      this._view.webview.postMessage(message);
-    }
+    this._view?.webview.postMessage(message);
   }
 }

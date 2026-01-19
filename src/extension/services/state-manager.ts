@@ -12,4 +12,12 @@ export class StateManager {
   public async saveConvos(convos: Convo[]): Promise<void> {
     await this.context.workspaceState.update(CONSTANTS.STORAGE.CONVOS, convos);
   }
+
+  public getLoggedOut(): boolean {
+    return this.context.globalState.get<boolean>(CONSTANTS.STORAGE.LOGGED_OUT, false);
+  }
+
+  public async setLoggedOut(val: boolean): Promise<void> {
+    await this.context.globalState.update(CONSTANTS.STORAGE.LOGGED_OUT, val);
+  }
 }

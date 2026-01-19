@@ -13,43 +13,44 @@ export function useMessageHandler() {
       const authStore = useAuthStore.getState();
 
       switch (data.command) {
-        case 'stream':
+        case 'stream': {
           chatStore.appendToken(data.text);
-          break;
-
-        case 'streamDone':
-          uiStore.toggleLoading();
-          break;
-
-        case 'addChat':
-          const id = chatStore.createConvo();
-          chatStore.setActiveConvo(id);
-          break;
-
-        case 'toggleHistory':
-          uiStore.toggleHistory();
-          chatStore.setConvos(data.data);
-          break;
-
-        case 'hydrate': {
-          console.log(data);
-          chatStore.setConvos(data.data);
-          if (data.data.length === 0) {
-            const id = chatStore.createConvo();
-            chatStore.setActiveConvo(id);
-          } else {
-            chatStore.setActiveConvo(data.data[0].id);
-          }
-          break;
+          return;
         }
 
-        case 'authSuccess':
-          authStore.setUser(data.data);
-          break;
+        case 'streamDone': {
+          uiStore.toggleLoading();
+          return;
+        }
 
-        case 'error':
-          console.error(data.text);
-          break;
+        case 'addChat': {
+          const id = chatStore.createConvo();
+          chatStore.setActiveConvo(id);
+          return;
+        }
+
+        case 'toggleHistory': {
+          uiStore.toggleHistory();
+          chatStore.setConvos(data.data);
+          return;
+        }
+
+        case 'hydrate': {
+          chatStore.setConvos(data.data);
+          const activeId = data.data.length > 0 ? data.data[0].id : chatStore.createConvo();
+          chatStore.setActiveConvo(activeId);
+          return;
+        }
+
+        case 'authSuccess': {
+          authStore.setUser(data.data);
+          return;
+        }
+
+        case 'error': {
+          uiStore.setError(data.text);
+          return;
+        }
       }
     };
     window.addEventListener('message', handleMessage);

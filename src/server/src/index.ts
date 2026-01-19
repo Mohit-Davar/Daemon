@@ -2,6 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 
+import authRoutes from '@/features/auth/routes';
 import chatRoutes from '@/features/chat/routes';
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 // app.use(verifyAuthToken);
 
 app.use('/api', chatRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
