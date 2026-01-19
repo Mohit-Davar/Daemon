@@ -23,9 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(CONSTANTS.COMMANDS.CHAT_HISTORY, () => {
       provider.postMessage({
         command: 'toggleHistory',
-        data: {
-          convos: stateManager.getConvos(),
-        },
+        data: stateManager.getConvos(),
       });
     }),
   );

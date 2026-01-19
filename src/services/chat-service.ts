@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 
-import { StateManager } from '@/services/state-manager';
-import { Convo, WebviewMessage, User } from '@/types';
 import { streamResponse } from '@/lib/utils';
+import { AuthService } from '@/services/auth-service';
+import { StateManager } from '@/services/state-manager';
+import { Convo, WebviewMessage } from '@/types';
 
 export class ChatService {
   private convos: Convo[];
@@ -10,6 +11,7 @@ export class ChatService {
   constructor(
     private readonly stateManager: StateManager,
     private readonly webview: vscode.Webview,
+    private readonly authService: AuthService,
   ) {
     this.convos = this.stateManager.getConvos();
   }
@@ -22,72 +24,15 @@ export class ChatService {
       case 'webviewLoaded':
         this.hydrateWebView();
         break;
-      case 'login':
-        this.handleLogin();
-        break;
-      case 'logout':
-        this.handleLogout();
-        break;
-      case 'checkAuth':
-        await this.handleCheckAuth();
-        break;
       default:
         console.error('Unknown Command', message.command);
-    }
-  }
-
-  private async handleLogin() {
-    try {
-      const session = await vscode.authentication.getSession('github', ['user.read'], {
-        createIfNone: true,
-      });
-      if (session) {
-        const user: User = {
-          id: session.account.id,
-          displayName: session.account.label,
-          email: session.account.label,
-          photo: `https://unavatar.io/microsoft/${session.account.label}`, // Fallback for photo
-        };
-        this.webview.postMessage({ command: 'authSuccess', data: user });
-      }
-    } catch (error) {
-      console.error('Login failed', error);
-      this.webview.postMessage({ command: 'authSuccess', data: null });
-    }
-  }
-
-  private async handleLogout() {
-    // VS Code doesn't have a direct "sign out" for all sessions via API easily without provider-specific logic
-    // but we can just notify our UI. The user can sign out via the Accounts menu in VS Code.
-    this.webview.postMessage({ command: 'authSuccess', data: null });
-  }
-
-  private async handleCheckAuth() {
-    try {
-      const session = await vscode.authentication.getSession('github', ['user.read'], {
-        createIfNone: false,
-      });
-      if (session) {
-        const user: User = {
-          id: session.account.id,
-          displayName: session.account.label,
-          email: session.account.label,
-          photo: `https://unavatar.io/microsoft/${session.account.label}`,
-        };
-        this.webview.postMessage({ command: 'authSuccess', data: user });
-      } else {
-        this.webview.postMessage({ command: 'authSuccess', data: null });
-      }
-    } catch (error) {
-      console.error('Auth check failed', error);
-      this.webview.postMessage({ command: 'authSuccess', data: null });
     }
   }
 
   private hydrateWebView() {
     this.webview.postMessage({
       command: 'hydrate',
-      data: { convos: this.convos },
+      data: this.convos,
     });
   }
 
@@ -132,9 +77,7 @@ export class ChatService {
       return;
     }
 
-    const session = await vscode.authentication.getSession('microsoft', ['user.read'], {
-      createIfNone: false,
-    });
+    const accessToken = await this.authService.getAccessToken();
 
     await streamResponse(
       'http://localhost:3000/api/chat',
@@ -161,7 +104,7 @@ export class ChatService {
           });
         },
       },
-      session ? { Authorization: `Bearer ${session.accessToken}` } : {},
+      accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
     );
   }
 }

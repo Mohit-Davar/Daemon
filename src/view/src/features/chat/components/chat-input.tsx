@@ -15,7 +15,7 @@ export function ChatInput() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <div className="bg-[var(--bg-editor)] shadow-lg backdrop-blur-md m-3 p-3 border border-[var(--vscode-widget-border)] rounded-xl">
+    <div className="bg-(--bg-editor) shadow-lg backdrop-blur-md m-3 p-3 border border-[var(--vscode-widget-border)] rounded-xl">
       {/* TEXTAREA */}
       <textarea
         ref={textareaRef}
