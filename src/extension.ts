@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
-import { CONSTANTS } from '@/lib/constants';
-import { SidebarProvider } from '@/providers/sidebar-provider';
-import { StateManager } from '@/services/state-manager';
+import { CONSTANTS } from '@/extension/lib/constants';
+import { SidebarProvider } from '@/extension/providers/sidebar-provider';
+import { StateManager } from '@/extension/services/state-manager';
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SidebarProvider(context, context.extensionUri);

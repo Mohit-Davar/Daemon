@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { CONSTANTS } from '@/lib/constants';
-import type { Convo } from '@/types';
+import { CONSTANTS } from '@/extension/lib/constants';
+import type { Convo } from '@/extension/types';
 
 export class StateManager {
   constructor(private readonly context: vscode.ExtensionContext) {}

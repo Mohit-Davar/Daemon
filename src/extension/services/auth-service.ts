@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { User, WebviewMessage } from '@/types';
+import { User, WebviewMessage } from '@/extension/types';
 
 export class AuthService {
   constructor(private readonly webview: vscode.Webview) {}

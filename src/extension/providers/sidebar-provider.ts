@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 
-import { CONSTANTS } from '@/lib/constants';
-import { getWebviewContent } from '@/lib/utils';
-import { AuthService } from '@/services/auth-service';
-import { ChatService } from '@/services/chat-service';
-import { StateManager } from '@/services/state-manager';
-import { WebviewMessage } from '@/types';
+import { CONSTANTS } from '@/extension/lib/constants';
+import { getWebviewContent } from '@/extension/lib/utils';
+import { AuthService } from '@/extension/services/auth-service';
+import { ChatService } from '@/extension/services/chat-service';
+import { StateManager } from '@/extension/services/state-manager';
+import { WebviewMessage } from '@/extension/types';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewId = CONSTANTS.VIEW_ID;

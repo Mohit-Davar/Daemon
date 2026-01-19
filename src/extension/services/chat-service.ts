@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 
-import { streamResponse } from '@/lib/utils';
-import { AuthService } from '@/services/auth-service';
-import { StateManager } from '@/services/state-manager';
-import { Convo, WebviewMessage } from '@/types';
+import { streamResponse } from '@/extension/lib/utils';
+import { AuthService } from '@/extension/services/auth-service';
+import { StateManager } from '@/extension/services/state-manager';
+import { Convo, WebviewMessage } from '@/extension/types';
 
 export class ChatService {
   private convos: Convo[];
