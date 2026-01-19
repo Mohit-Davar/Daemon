@@ -14,5 +14,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true
   },
-  "exclude": ["src/view/**/*"]
+  "exclude": ["src/view/**/*", "src/server/**/*"]
 }

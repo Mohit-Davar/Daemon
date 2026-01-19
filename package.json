@@ -68,7 +68,7 @@
     "watch:view": "pnpm --filter view dev",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --noEmit && pnpm --filter @daemon/server exec tsc --noEmit",
     "test": "vscode-test"
   },
   "devDependencies": {

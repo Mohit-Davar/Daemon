@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CONSTANTS } from '@/lib/constants';
-import { getWebviewContent } from '@/lib/webview-utils';
+import { getWebviewContent } from '@/lib/utils';
 import { ChatService } from '@/services/chat-service';
 import { StateManager } from '@/services/state-manager';
 import { WebviewMessage } from '@/types';

@@ -1,3 +1,10 @@
+export interface User {
+  id: string;
+  displayName: string;
+  email: string;
+  photo: string;
+}
+
 export type Sender = 'user' | 'assistant';
 
 export interface Message {
@@ -17,12 +24,9 @@ export interface Convo {
 export interface WebviewMessage {
   command: string;
   data?: unknown;
-  text?: string;
 }
 
 export interface LLMMessage {
   role: Sender;
   content: string;
 }
-
-

@@ -1,3 +1,10 @@
+export type User = {
+  id: string;
+  displayName: string;
+  email: string;
+  photo: string;
+};
+
 export type Sender = 'user' | 'assistant';
 
 export type Message = {

@@ -11,6 +11,9 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// In a real app, you would add a middleware to verify the VS Code auth token here
+// app.use(verifyAuthToken);
+
 app.use('/api', chatRoutes);
 
 app.listen(port, () => {

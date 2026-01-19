@@ -33,6 +33,7 @@ export async function streamResponse(
   url: string,
   body: object,
   callbacks: StreamResponseCallbacks,
+  headers: Record<string, string> = {},
 ): Promise<void> {
   const { onToken, onDone, onError } = callbacks;
 
@@ -41,6 +42,7 @@ export async function streamResponse(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...headers,
       },
       body: JSON.stringify(body),
     });

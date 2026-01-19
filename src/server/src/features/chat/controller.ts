@@ -6,7 +6,8 @@ import { callLLM } from '@/features/chat/utils';
 export const handleChat = async (req: Request, res: Response) => {
   const messages: ChatMessage[] = req.body.messages;
   if (!messages) {
-    return res.status(400).json({ error: 'Missing messages in request body.' });
+    res.status(400).json({ error: 'Missing messages in request body.' });
+    return;
   }
 
   // Streaming headers
