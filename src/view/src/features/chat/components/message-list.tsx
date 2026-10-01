@@ -14,20 +14,18 @@ export function MessageList() {
   const scrollToBottom = useScrollToBottom();
   const [sticky] = useSticky();
 
-  if (!activeID || !messages.length) {
-    return <WelcomeScreen />;
-  }
+  if (!activeID || !messages.length) return <WelcomeScreen />;
 
   return (
-    <div className="relative flex-1 overflow-y-hidden">
+    <div className="relative flex-1">
       <ScrollToBottom
         key={activeID}
         className="w-full h-full"
-        scrollViewClassName="flex flex-col gap-6 p-4 w-full overflow-y-auto scroll-smooth"
+        scrollViewClassName="flex flex-col p-3 w-full overflow-y-auto"
         initialScrollBehavior="auto"
         followButtonClassName="hidden"
       >
-        <div className="flex flex-col gap-6 mx-auto pb-4 w-full max-w-4xl">
+        <div className="flex flex-col gap-4 w-full pb-2">
           {messages.map((msg) => (
             <MessageItem key={msg.id} msg={msg} />
           ))}

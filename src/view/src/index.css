@@ -1,16 +1,110 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-brand: var(--vscode-button-background);
+  --color-brand-hover: var(--vscode-button-hoverBackground);
+  --color-border: var(--vscode-widget-border);
+  --color-bg-subtle: var(--vscode-editor-inactiveSelectionBackground);
+}
+
 :root {
   --bg-editor: var(--vscode-editor-background);
   --fg-editor: var(--vscode-editor-foreground);
+  --secondary-fg: var(--vscode-descriptionForeground);
+  --border-colour: var(--vscode-widget-border);
+  --hover-bg: var(--vscode-list-hoverBackground);
 }
 
-/* Chrome / Edge / Safari */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(
+    --vscode-font-family,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  background-color: var(--bg-editor);
+  color: var(--fg-editor);
+  overflow: hidden;
+  font-size: var(--vscode-font-size, 13px);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide scrollbars for inputs */
 textarea::-webkit-scrollbar {
   display: none;
 }
 
-/* Firefox */
 textarea {
   scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
 }

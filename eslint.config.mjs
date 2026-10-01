@@ -27,10 +27,21 @@ export default [
   // Base TS config for all TS files
   ...tseslint.configs.recommended,
 
+  // Override for server files
+  {
+    files: ['src/server/**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: `${import.meta.dirname}/src/server`,
+      },
+    },
+  },
+
   // Override for extension files for type-aware linting
   {
     files: ['src/**/*.ts'],
-    ignores: ['src/view/**'],
+    ignores: ['src/view/**', 'src/server/**'],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',

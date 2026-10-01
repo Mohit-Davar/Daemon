@@ -1,16 +1,39 @@
-import { Sparkles } from 'lucide-react';
+const CAPABILITIES = [
+  {
+    label: 'Debug & Refactor',
+    description: 'Analyse your current file for bugs or performance optimisations.',
+  },
+  {
+    label: 'Explain Concepts',
+    description: 'Deep dive into complex logic, libraries, or unfamiliar patterns.',
+  },
+  {
+    label: 'Generate Logic',
+    description: 'Draft boilerplate, algorithms, or unit tests instantly.',
+  },
+];
 
 export function WelcomeScreen() {
   return (
-    <div className="flex flex-col justify-center items-center p-8 h-full overflow-y-auto text-center animate-in duration-500 fade-in zoom-in">
-      <div className="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] shadow-lg mb-6 rounded-2xl w-16 h-16">
-        <Sparkles size={32} className="text-[var(--vscode-button-foreground)]" />
-      </div>
-      <h3 className="mb-2 font-semibold text-2xl">Welcome to Daemon</h3>
-      <p className="max-w-md text-[var(--secondary-fg)] text-base leading-relaxed">
-        I can help you analyze code, explain concepts, or refactor your project. Select a
-        conversation or type a message to get started.
+    <div className="flex flex-col items-center justify-center h-full p-4 text-center select-none">
+      <h1 className="text-base font-semibold text-foreground mb-1">Daemon</h1>
+      <p className="text-xs text-muted-foreground leading-relaxed mb-6 max-w-55">
+        Start a conversation or select a session from history.
       </p>
+
+      <div className="grid gap-2 w-full text-left">
+        {CAPABILITIES.map((cap) => (
+          <div
+            key={cap.label}
+            className="p-3 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 transition-colors"
+          >
+            <div className="text-xs font-medium text-foreground mb-0.5">{cap.label}</div>
+            <div className="text-[11px] text-muted-foreground leading-relaxed">
+              {cap.description}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

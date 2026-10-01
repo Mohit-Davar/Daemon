@@ -1,3 +1,9 @@
+export interface User {
+  id: string;
+  username: string;
+  photo: string;
+}
+
 export type Sender = 'user' | 'assistant';
 
 export interface Message {
@@ -24,5 +30,3 @@ export interface LLMMessage {
   role: Sender;
   content: string;
 }
-
-

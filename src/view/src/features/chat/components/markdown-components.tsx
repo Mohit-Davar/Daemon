@@ -63,8 +63,8 @@ export const markdownComponents: Components = {
 
   table({ children }) {
     return (
-      <div className="my-4 border border-[var(--border-color)] rounded-lg overflow-x-auto">
-        <table className="divide-[var(--border-color)] divide-y min-w-full text-sm">
+      <div className="my-4 border border-[var(--border-colour)] rounded-lg overflow-x-auto">
+        <table className="divide-[var(--border-colour)] divide-y min-w-full text-sm">
           {children}
         </table>
       </div>
@@ -79,7 +79,7 @@ export const markdownComponents: Components = {
 
   tbody({ children }) {
     return (
-      <tbody className="bg-transparent divide-[var(--border-color)] divide-y">{children}</tbody>
+      <tbody className="bg-transparent divide-[var(--border-colour)] divide-y">{children}</tbody>
     );
   },
 
@@ -116,7 +116,7 @@ export const markdownComponents: Components = {
   },
 
   hr() {
-    return <hr className="my-6 border-[var(--border-color)]" />;
+    return <hr className="my-6 border-[var(--border-colour)]" />;
   },
 
   strong({ children }) {
@@ -141,7 +141,7 @@ export const markdownComponents: Components = {
         <img
           src={src ?? ''}
           alt={alt ?? ''}
-          className="border border-[var(--border-color)] rounded-lg max-w-full"
+          className="border border-[var(--border-colour)] rounded-lg max-w-full"
         />
         {alt && (
           <figcaption className="mt-2 text-[var(--secondary-fg)] text-xs text-center">

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { CONSTANTS } from '@/lib/constants';
-import type { Convo } from '@/types';
+import { CONSTANTS } from '@/extension/lib/constants';
+import type { Convo } from '@/extension/types';
 
 export class StateManager {
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -11,5 +11,13 @@ export class StateManager {
 
   public async saveConvos(convos: Convo[]): Promise<void> {
     await this.context.workspaceState.update(CONSTANTS.STORAGE.CONVOS, convos);
+  }
+
+  public getLoggedOut(): boolean {
+    return this.context.globalState.get<boolean>(CONSTANTS.STORAGE.LOGGED_OUT, false);
+  }
+
+  public async setLoggedOut(val: boolean): Promise<void> {
+    await this.context.globalState.update(CONSTANTS.STORAGE.LOGGED_OUT, val);
   }
 }

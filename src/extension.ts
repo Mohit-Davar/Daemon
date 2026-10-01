@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
-import { CONSTANTS } from '@/lib/constants';
-import { SidebarProvider } from '@/providers/sidebar-provider';
-import { StateManager } from '@/services/state-manager';
+import { CONSTANTS } from '@/extension/lib/constants';
+import { SidebarProvider } from '@/extension/providers/sidebar-provider';
+import { StateManager } from '@/extension/services/state-manager';
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SidebarProvider(context, context.extensionUri);
@@ -23,9 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(CONSTANTS.COMMANDS.CHAT_HISTORY, () => {
       provider.postMessage({
         command: 'toggleHistory',
-        data: {
-          convos: stateManager.getConvos(),
-        },
+        data: stateManager.getConvos(),
+      });
+    }),
+
+    vscode.commands.registerCommand(CONSTANTS.COMMANDS.LOGOUT, () => {
+      provider.postMessage({
+        command: 'logout',
       });
     }),
   );

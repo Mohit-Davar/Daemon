@@ -90,4 +90,21 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       }),
     }));
   },
+
+  deleteConvo: (id) => {
+    const { activeID } = get();
+    set((s) => {
+      const remaining = s.convos.filter((c) => c.id !== id);
+      const newActiveID = activeID === id ? (remaining[0]?.id ?? null) : activeID;
+      return { convos: remaining, activeID: newActiveID };
+    });
+    VSCode.postMessage({ command: 'deleteConvo', data: { id } });
+  },
+
+  renameConvo: (id, title) => {
+    set((s) => ({
+      convos: s.convos.map((c) => (c.id === id ? { ...c, title, updatedAt: Date.now() } : c)),
+    }));
+    VSCode.postMessage({ command: 'renameConvo', data: { id, title } });
+  },
 }));
