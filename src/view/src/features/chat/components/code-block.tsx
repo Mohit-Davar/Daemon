@@ -1,6 +1,7 @@
 import type { Components } from 'react-markdown';
 
-import { CopyButton } from '@/components/ui/copy-button';
+import { CopyButton } from '../../../components/ui/copy-button';
+import { InsertButton } from '../../../components/ui/insert-button';
 import { atomOneDark, SyntaxHighlighter } from '@/features/chat/lib/syntax-highlighter';
 
 type CodeProps = NonNullable<Components['code']>;
@@ -13,7 +14,7 @@ export const CodeBlock: CodeProps = ({ children, className, ...rest }) => {
     return (
       <code
         {...rest}
-        className="bg-[var(--vscode-textCodeBlock-background)] px-1.5 py-0.5 border border-[var(--border-color)] rounded-md font-mono text-[var(--vscode-textPreformat-foreground)] text-sm"
+        className="bg-[var(--vscode-textCodeBlock-background)] px-1.5 py-0.5 border border-[var(--border-colour)] rounded-md font-mono text-[var(--vscode-textPreformat-foreground)] text-sm"
       >
         {children}
       </code>
@@ -21,10 +22,13 @@ export const CodeBlock: CodeProps = ({ children, className, ...rest }) => {
   }
 
   return (
-    <div className="my-4 border border-[var(--border-color)] rounded-lg overflow-hidden">
-      <div className="flex justify-between items-center bg-[var(--vscode-editor-inactiveSelectionBackground)] px-3 py-1.5 border-[var(--border-color)] border-b font-mono text-[var(--secondary-fg)] text-xs">
+    <div className="my-4 border border-[var(--border-colour)] rounded-lg overflow-hidden">
+      <div className="flex justify-between items-center bg-[var(--vscode-editor-inactiveSelectionBackground)] px-3 py-1.5 border-[var(--border-colour)] border-b font-mono text-[var(--secondary-fg)] text-xs">
         <span className="font-semibold">{match[1]}</span>
-        <CopyButton content={codeString} />
+        <div className="flex items-center gap-1">
+          <InsertButton code={codeString} />
+          <CopyButton content={codeString} />
+        </div>
       </div>
 
       <SyntaxHighlighter

@@ -26,6 +26,12 @@ export function activate(context: vscode.ExtensionContext) {
         data: stateManager.getConvos(),
       });
     }),
+
+    vscode.commands.registerCommand(CONSTANTS.COMMANDS.LOGOUT, () => {
+      provider.postMessage({
+        command: 'logout',
+      });
+    }),
   );
 }
 

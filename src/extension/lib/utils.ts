@@ -25,6 +25,7 @@ export function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.
 
 export interface StreamResponseCallbacks {
   onToken: (token: string) => void;
+  onConvoId?: (id: string) => void;
   onDone: () => void;
   onError: (error: Error) => void;
 }
@@ -84,6 +85,10 @@ export async function streamResponse(
           }
           if (token === '[ERROR]') {
             throw new Error('Server-side error during stream.');
+          }
+
+          if (payload.convoId && callbacks.onConvoId) {
+            callbacks.onConvoId(payload.convoId);
           }
 
           if (token) {

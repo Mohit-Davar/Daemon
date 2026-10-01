@@ -4,6 +4,7 @@ import { useAuthStore } from '@/features/auth/store/auth-store';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { VSCode } from '@/lib/vscode';
 import { useUIStore } from '@/store/ui-store';
+import type { ActiveFileContext } from '@/types';
 
 export function useMessageHandler() {
   useEffect(() => {
@@ -51,17 +52,25 @@ export function useMessageHandler() {
           uiStore.setError(data.text);
           return;
         }
+
+        case 'setContext': {
+          uiStore.setActiveFile(data.data as ActiveFileContext);
+          return;
+        }
+
+        case 'convoDeleted': {
+          // Extension has already deleted and echoed back — activeID was updated in the store
+          // when the user clicked, so nothing more to do here unless needed
+          return;
+        }
       }
     };
+
     window.addEventListener('message', handleMessage);
 
     // Signal backend that we are ready
-    VSCode.postMessage({
-      command: 'webviewLoaded',
-    });
-    VSCode.postMessage({
-      command: 'checkAuth',
-    });
+    VSCode.postMessage({ command: 'webviewLoaded' });
+    VSCode.postMessage({ command: 'checkAuth' });
 
     return () => {
       window.removeEventListener('message', handleMessage);

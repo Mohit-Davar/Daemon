@@ -23,6 +23,7 @@ export interface Convo {
 export interface WebviewMessage {
   command: string;
   data?: unknown;
+  text?: string;
 }
 
 export interface LLMMessage {

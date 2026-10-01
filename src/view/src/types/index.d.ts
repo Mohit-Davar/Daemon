@@ -1,7 +1,6 @@
 export type User = {
   id: string;
-  displayName: string;
-  email: string;
+  username: string;
   photo: string;
 };
 
@@ -35,14 +34,23 @@ export type ChatStore = {
   setActiveConvo: (id: string) => void;
 
   appendToken: (token: string) => void;
+  deleteConvo: (id: string) => void;
+  renameConvo: (id: string, title: string) => void;
 };
+
+export type ActiveFileContext = {
+  fileName: string;
+  languageId: string;
+} | null;
 
 export type UIStore = {
   historyOpen: boolean;
   loading: boolean;
   error: string | null;
+  activeFile: ActiveFileContext;
 
   toggleLoading: () => void;
   toggleHistory: () => void;
   setError: (msg: string | null) => void;
+  setActiveFile: (ctx: ActiveFileContext) => void;
 };

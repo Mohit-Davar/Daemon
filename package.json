@@ -35,6 +35,11 @@
         "command": "daemon.chatHistory",
         "title": "History",
         "icon": "$(history)"
+      },
+      {
+        "command": "daemon.logout",
+        "title": "Logout",
+        "icon": "$(sign-out)"
       }
     ],
     "menus": {
@@ -46,6 +51,11 @@
         },
         {
           "command": "daemon.chatHistory",
+          "when": "view == daemonView",
+          "group": "navigation"
+        },
+        {
+          "command": "daemon.logout",
           "when": "view == daemonView",
           "group": "navigation"
         }

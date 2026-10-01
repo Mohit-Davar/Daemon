@@ -1,7 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "dist",
@@ -9,7 +10,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitReturns": true
   },
   "include": ["src/**/*.ts", "src/index.ts"],
   "exclude": ["node_modules"]

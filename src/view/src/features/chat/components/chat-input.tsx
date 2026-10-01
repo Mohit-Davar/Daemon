@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 
-import { ArrowUp, Plus } from 'lucide-react';
+import { SendHorizontal } from 'lucide-react';
 
+import { ContextBadge } from '@/features/chat/components/context-badge';
 import { handleGrow, handleSend } from '@/features/chat/lib/input-handlers';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { useUIStore } from '@/store/ui-store';
@@ -14,48 +15,45 @@ export function ChatInput() {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const onSend = () => {
+    if (query.trim() && !loading) {
+      handleSend(loading, textareaRef, sendQuery);
+    }
+  };
+
   return (
-    <div className="bg-(--bg-editor) shadow-lg backdrop-blur-md m-3 p-3 border border-[var(--vscode-widget-border)] rounded-xl">
-      {/* TEXTAREA */}
-      <textarea
-        ref={textareaRef}
-        rows={1}
-        value={query}
-        placeholder="How can I help?"
-        onChange={(e) => {
-          setQuery(e.target.value);
-          handleGrow(textareaRef);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSend(loading, textareaRef, sendQuery);
-          }
-        }}
-        className="bg-transparent outline-none w-full overflow-y-auto text-[var(--fg-editor)] placeholder:text-[var(--vscode-input-placeholderForeground)] text-sm leading-relaxed resize-none"
-      />
+    <div className="p-3">
+      <ContextBadge />
 
-      {/* BUTTONS */}
-      <div className="flex justify-between items-center mt-2">
-        {/* ADD FILE */}
-        <button
-          className="hover:bg-[var(--vscode-button-secondaryHoverBackground)] p-1 border border-[var(--vscode-widget-border)] rounded-lg text-[var(--fg-editor)] transition cursor-pointer"
-          title="Add File"
-        >
-          <Plus size={16} />
-        </button>
-
-        {/* SEND MESSAGE */}
-        <button
-          title="Send"
-          onClick={() => {
-            handleSend(loading, textareaRef, sendQuery);
+      <div className="relative flex flex-col bg-muted/40 border border-border rounded-xl overflow-hidden focus-within:border-muted-foreground/40 transition-colors">
+        <textarea
+          ref={textareaRef}
+          rows={1}
+          value={query}
+          placeholder="Ask anything..."
+          onChange={(e) => {
+            setQuery(e.target.value);
+            handleGrow(textareaRef);
           }}
-          disabled={!query.trim() || loading}
-          className="bg-[var(--vscode-button-secondaryBackground)] hover:bg-[var(--vscode-button-hoverBackground)] disabled:opacity-40 p-1 rounded-full text-[var(--fg-editor)] transition cursor-pointer disabled:cursor-not-allowed"
-        >
-          <ArrowUp size={16} />
-        </button>
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              onSend();
+            }
+          }}
+          className="w-full p-3 pr-12 bg-transparent outline-none text-sm leading-relaxed resize-none min-h-11 max-h-40 text-foreground placeholder:text-muted-foreground/50"
+        />
+
+        <div className="absolute bottom-2 right-2">
+          <button
+            onClick={onSend}
+            disabled={!query.trim() || loading}
+            title="Send"
+            className="p-1.5 bg-foreground text-background rounded-lg disabled:opacity-25 transition-opacity flex items-center justify-center"
+          >
+            <SendHorizontal size={15} />
+          </button>
+        </div>
       </div>
     </div>
   );

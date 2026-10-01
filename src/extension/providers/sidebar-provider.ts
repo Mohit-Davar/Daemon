@@ -37,6 +37,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       await this._authService?.handleMessage(message);
       await this._chatService?.handleMessage(message);
     });
+
+    // Push updated context badge whenever the user switches editor tabs
+    const editorListener = vscode.window.onDidChangeActiveTextEditor(() => {
+      this._chatService?.handleMessage({ command: 'getContext' });
+    });
+
+    webviewView.onDidDispose(() => {
+      editorListener.dispose();
+    });
   }
 
   // Helper method to send messages to the webview from commands

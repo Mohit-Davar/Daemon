@@ -1,34 +1,41 @@
 import { Github } from 'lucide-react';
+
 import { Auth } from '@/features/auth/components/auth';
 
 export function LoginScreen() {
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center p-6 text-center animate-fade-in bg-gradient-to-br from-[var(--bg-editor)] to-[var(--bg-editor)]/80">
-      <div className="max-w-md space-y-8 glass p-8 rounded-2xl shadow-2xl border-white/5">
-        <div className="space-y-4">
-          <div className="mx-auto w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center border border-blue-500/30">
-            <Github className="w-8 h-8 text-blue-500" />
+    <div className="w-full h-screen p-3 flex items-center justify-center">
+      <div className="w-full">
+        <div className="bg-background border border-border rounded-xl p-6 text-center">
+          <div className="flex justify-center mb-6">
+            <div className="w-12 h-12 rounded-lg bg-muted border border-border flex items-center justify-center">
+              <Github className="w-5 h-5 text-foreground" />
+            </div>
           </div>
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight text-white">Daemon</h1>
-            <p className="text-muted-foreground text-lg">Your AI-powered development assistant.</p>
-          </div>
-        </div>
 
-        <div className="pt-4">
+          <div className="mb-6">
+            <h1 className="text-lg font-semibold text-foreground mb-2">Welcome to Daemon</h1>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Connect your GitHub account to start using Daemon.
+            </p>
+          </div>
+
           <Auth />
+
+          <p className="mt-5 text-xs text-muted-foreground/70 leading-relaxed">
+            By continuing, you agree to our{' '}
+            <a href="/terms" className="text-muted-foreground underline underline-offset-2">
+              Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="/privacy" className="text-muted-foreground underline underline-offset-2">
+              Privacy Policy
+            </a>
+            .
+          </p>
         </div>
 
-        <div className="pt-8 grid grid-cols-2 gap-4 text-xs text-white/40">
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-            AI Powered
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-            Vite Fast
-          </div>
-        </div>
+        <p className="text-center text-xs text-muted-foreground/50 mt-4">Daemon</p>
       </div>
     </div>
   );
